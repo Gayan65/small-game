@@ -17,6 +17,10 @@ export default function Board() {
 
     // Setting the values to the array and change the symble accordingly
     function handleClick(i) {
+        // Stopping the repeat click
+        if (squares[i]) {
+            return;
+        }
         const nextSquares = squares.slice();
         if (xIsNext) {
             nextSquares[i] = "X";
