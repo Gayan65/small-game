@@ -10,14 +10,22 @@ function Square({ value, onSquareClick }) {
 }
 
 export default function Board() {
+    //Maintains an state for the next move
+    const [xIsNext, setXIsNext] = useState(true);
     //Makinga new state array
     const [squares, setSquares] = useState(Array(9).fill(null));
 
-    // Setting the values to the array
+    // Setting the values to the array and change the symble accordingly
     function handleClick(i) {
         const nextSquares = squares.slice();
-        nextSquares[i] = "X";
+        if (xIsNext) {
+            nextSquares[i] = "X";
+        } else {
+            nextSquares[i] = "O";
+        }
+
         setSquares(nextSquares);
+        setXIsNext(!xIsNext);
     }
 
     return (
