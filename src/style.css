@@ -1,0 +1,14 @@
+.square {
+    background-color: bisque;
+    height: 100px;
+    width: 100px;
+    font-size: 35px;
+    border: solid 1px lightslategray;
+    overflow: hidden; /* Ensures content doesn't affect layout */
+    white-space: nowrap; /* Prevents text from wrapping to the next line */
+    box-sizing: border-box; /* Include padding and borders in total width and height */
+    line-height: 100px; /* Match the height of the button */
+    vertical-align: middle; /* Ensure text stays vertically centered */
+    transform: none; /* Reset any transforms or adjust as needed */
+    /* ... other styles */
+}
