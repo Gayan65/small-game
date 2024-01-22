@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-//Returns the value once the button get clicked
+//Renders the each square
 function Square({ value, onSquareClick }) {
     return (
         <button className="square" onClick={onSquareClick}>
@@ -9,11 +9,11 @@ function Square({ value, onSquareClick }) {
     );
 }
 
+//Render the entire square board
 function Board({ xIsNext, squares, onPlay }) {
-    // Setting the values to the array and change the symble accordingly
+    // Handles a click on a square
     function handleClick(i) {
-        // Stopping the repeat click passing the winner claculation
-        if (squares[i] || calculateWinner(squares)) {
+        if (calculateWinner(squares) || squares[i]) {
             return;
         }
         const nextSquares = squares.slice();
@@ -24,7 +24,7 @@ function Board({ xIsNext, squares, onPlay }) {
         }
         onPlay(nextSquares);
     }
-    //getting the winner, player status
+
     const winner = calculateWinner(squares);
     let status;
     if (winner) {
@@ -82,6 +82,58 @@ function Board({ xIsNext, squares, onPlay }) {
     );
 }
 
+// Main Game component
+export default function Game() {
+    const [history, setHistory] = useState([Array(9).fill(null)]);
+    const [currentMove, setCurrentMove] = useState(0);
+    const xIsNext = currentMove % 2 === 0;
+    const currentSquares = history[currentMove];
+
+    // Handles a play (placing X or O on the board)
+    function handlePlay(nextSquares) {
+        const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+        setHistory(nextHistory);
+        setCurrentMove(nextHistory.length - 1);
+    }
+
+    // Handles jumping to a specific move in history
+    function jumpTo(nextMove) {
+        setCurrentMove(nextMove);
+    }
+
+    // Maps each move in history to a button in the moves list
+    const moves = history.map((squares, move) => {
+        let description;
+        if (move > 0) {
+            description = "Go to move #" + move;
+        } else {
+            description = "Go to game start";
+        }
+        return (
+            <li key={move}>
+                <button onClick={() => jumpTo(move)}>{description}</button>
+            </li>
+        );
+    });
+
+    // Renders the overall game structure
+    return (
+        <div className="game">
+            <div className="game-board">
+                <Board
+                    xIsNext={xIsNext}
+                    squares={currentSquares}
+                    onPlay={handlePlay}
+                />
+            </div>
+            <div className="game-info">
+                <ol>{moves}</ol>
+            </div>
+        </div>
+    );
+}
+
+// Function to calculate the winner based on the current board state
 function calculateWinner(squares) {
     const lines = [
         [0, 1, 2],
@@ -104,46 +156,4 @@ function calculateWinner(squares) {
         }
     }
     return null;
-}
-
-export default function Game() {
-    const [xIsNext, setXIsNext] = useState(true);
-    const [history, setHistory] = useState([Array(9).fill(null)]);
-    const currentSquares = history[history.length - 1];
-
-    function handlePlay(nextSquares) {
-        setHistory([...history, nextSquares]);
-        setXIsNext(!xIsNext);
-    }
-    function jumpTo(nextMove) {
-        // TODO
-    }
-
-    const moves = history.map((squares, move) => {
-        let description;
-        if (move > 0) {
-            description = "Go to move #" + move;
-        } else {
-            description = "Go to game start";
-        }
-        return (
-            <li>
-                <button onClick={() => jumpTo(move)}>{description}</button>
-            </li>
-        );
-    });
-    return (
-        <div className="game">
-            <div className="game-board">
-                <Board
-                    xIsNext={xIsNext}
-                    squares={currentSquares}
-                    onPlay={handlePlay}
-                />
-            </div>
-            <div className="game-info">
-                <ol>{moves}</ol>
-            </div>
-        </div>
-    );
 }
