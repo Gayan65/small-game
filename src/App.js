@@ -9,7 +9,7 @@ function Square({ value, onSquareClick }) {
     );
 }
 
-export default function Board() {
+export function Board() {
     //Maintains an state for the next move
     const [xIsNext, setXIsNext] = useState(true);
     //Makinga new state array
@@ -111,4 +111,17 @@ function calculateWinner(squares) {
         }
     }
     return null;
+}
+
+export default function Game() {
+    return (
+        <div className="game">
+            <div className="game-board">
+                <Board />
+            </div>
+            <div className="game-info">
+                <ol>{/*TODO*/}</ol>
+            </div>
+        </div>
+    );
 }
